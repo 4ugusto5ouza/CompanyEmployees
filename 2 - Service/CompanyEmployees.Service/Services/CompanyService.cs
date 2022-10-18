@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using CompanyEmployees.Domain.Entities;
+using CompanyEmployees.Domain.Exceptions;
 using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Service.DataTransferObjects;
 using CompanyEmployees.Service.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CompanyEmployees.Service.Services
 {
@@ -31,9 +30,11 @@ namespace CompanyEmployees.Service.Services
             return companiesDto;
         }
 
-        public CompanyDto GetCompany(Guid companyId, bool trackChanges)
+        public CompanyDto GetCompany(Guid id, bool trackChanges)
         {
-            var company = _repository.CompanyRepository.GetCompany(companyId, trackChanges);
+            var company = _repository.CompanyRepository.GetCompany(id, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(id);
 
             var companyDto = _mapper.Map<CompanyDto>(company);
 

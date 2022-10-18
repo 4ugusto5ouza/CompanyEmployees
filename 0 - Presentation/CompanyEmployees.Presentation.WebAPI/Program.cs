@@ -22,6 +22,8 @@ builder.Services.AddControllers()
 
 builder.Services.ConfigureSQLContext(builder.Configuration);
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

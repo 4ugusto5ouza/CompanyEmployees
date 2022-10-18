@@ -1,4 +1,5 @@
-﻿using CompanyEmployees.Domain.Interfaces;
+﻿using AutoMapper;
+using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Service.Interfaces;
 using System;
 
@@ -9,10 +10,10 @@ namespace CompanyEmployees.Service.Services.ServiceManager
         private readonly Lazy<ICompanyService> _companyService;
         private readonly Lazy<IEmployeeService> _employeeService;
 
-        public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger)
+        public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger, IMapper mapper)
         {
-            _companyService = new Lazy<ICompanyService>(() => new CompanyService(repositoryManager, logger));
-            _employeeService = new Lazy<IEmployeeService>(() => new EmployeeService(repositoryManager, logger));
+            _companyService = new Lazy<ICompanyService>(() => new CompanyService(repositoryManager, logger, mapper));
+            _employeeService = new Lazy<IEmployeeService>(() => new EmployeeService(repositoryManager, logger, mapper));
         }
 
         public ICompanyService CompanyService => _companyService.Value;

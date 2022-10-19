@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CompanyEmployees.Domain.Entities;
 using CompanyEmployees.Domain.Exceptions;
 using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Service.DataTransferObjects;
@@ -39,6 +40,18 @@ namespace CompanyEmployees.Service.Services
             var companyDto = _mapper.Map<CompanyDto>(company);
 
             return companyDto;
+        }
+
+        public CompanyDto CreateCompany(CompanyForCreationDto company)
+        {
+            var companyEntity = _mapper.Map<Company>(company);
+
+            _repository.CompanyRepository.CreateCompany(companyEntity);
+            _repository.Save();
+
+            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+
+            return companyToReturn;
         }
     }
 }

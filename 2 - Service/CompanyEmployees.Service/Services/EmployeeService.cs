@@ -34,5 +34,22 @@ namespace CompanyEmployees.Service.Services
 
             return employeesDto;
         }
+
+        public EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges)
+        {
+            var company = _repository.CompanyRepository.GetCompany(companyId, trackChanges);
+
+            if (company is null)
+                throw new CompanyNotFoundException(companyId);
+
+            var employeeDb = _repository.EmployeeRepository.GetEmployee(companyId, id, trackChanges);
+
+            if(employeeDb is null)
+                throw new EmployeeNotFoundException(id);
+
+            var employeeDto = _mapper.Map<EmployeeDto>(employeeDb);
+
+            return employeeDto;
+        }
     }
 }

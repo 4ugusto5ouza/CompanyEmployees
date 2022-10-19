@@ -21,5 +21,10 @@ namespace CompanyEmployees.Infrastructure.Repositories
                         .OrderBy(e => e.Name)
                         .ToList();
         }
+        public Employee GetEmployee(Guid companyId, Guid id, bool trackChanges)
+        {
+            return FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(id), trackChanges).SingleOrDefault();
+            throw new NotImplementedException();
+        }
     }
 }

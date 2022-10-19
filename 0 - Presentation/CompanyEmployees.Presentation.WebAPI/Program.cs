@@ -2,6 +2,7 @@ using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Presentation.WebAPI.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
@@ -17,6 +18,11 @@ builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
+
+builder.Services.Configure<ApiBehaviorOptions>(opt =>
+{
+    opt.SuppressModelStateInvalidFilter = true;
+});
 
 builder.Services.AddControllers(config =>
 {

@@ -1,6 +1,7 @@
 ﻿using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Infrastructure.Context;
 using CompanyEmployees.Infrastructure.Repositories.RepositoryManager;
+using CompanyEmployees.Presentation.WebAPI.CustomFormatters;
 using CompanyEmployees.Service.Interfaces;
 using CompanyEmployees.Service.Logger;
 using CompanyEmployees.Service.Services.ServiceManager;
@@ -37,6 +38,9 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
         public static void ConfigureSQLContext(this IServiceCollection services, IConfiguration configuration) => 
             services.AddDbContext<CompanyEmployeesContext>(opts => 
                     opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+
+        public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
+            builder.AddMvcOptions(config => config.OutputFormatters.Add(new CsvOutputFormatter()));
 
     }
 }

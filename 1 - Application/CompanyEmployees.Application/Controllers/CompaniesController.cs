@@ -23,7 +23,7 @@ namespace CompanyEmployees.Application.Controllers
             return Ok(companies);
         }
 
-        [HttpGet("{id:guid}", Name = "CompanyById")]
+        [HttpGet("{id:guid}", Name = "GetCompany")]
         public IActionResult GetCompany(Guid id)
         {
             var company = _serviceManager.CompanyService.GetCompany(id, trackChanges: false);
@@ -38,7 +38,7 @@ namespace CompanyEmployees.Application.Controllers
 
             var createdCompany = _serviceManager.CompanyService.CreateCompany(company);
 
-            return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
+            return CreatedAtRoute("GetCompany", new { id = createdCompany.Id }, createdCompany);
         }
     }
 }

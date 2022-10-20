@@ -15,6 +15,7 @@ namespace CompanyEmployees.Service.Mappings
             CreateMap<CompanyForCreationDto, Company>();
 
             CreateMap<Employee, EmployeeDto>();
+            CreateMap<EmployeeForCreationDto, Employee>();
         }
     }
 }

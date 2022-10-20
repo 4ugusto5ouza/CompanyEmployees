@@ -1,4 +1,6 @@
-﻿namespace CompanyEmployees.Service.DataTransferObjects
+﻿using System.Collections.Generic;
+
+namespace CompanyEmployees.Service.DataTransferObjects
 {
-    public record CompanyForCreationDto(string Name, string Address, string Country);
+    public record CompanyForCreationDto(string Name, string Address, string Country, IEnumerable<EmployeeForCreationDto> Employees);
 }

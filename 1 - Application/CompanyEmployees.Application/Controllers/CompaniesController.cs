@@ -1,4 +1,5 @@
-﻿using CompanyEmployees.Service.DataTransferObjects;
+﻿using CompanyEmployees.Application.ModelBinders;
+using CompanyEmployees.Service.DataTransferObjects;
 using CompanyEmployees.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,7 +26,7 @@ namespace CompanyEmployees.Application.Controllers
         }
 
         [HttpGet("collection/({ids})", Name = "GetCompanyCollection")]
-        public IActionResult GetCompanyColletion(IEnumerable<Guid> ids)
+        public IActionResult GetCompanyColletion([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
         {
             var companies = _serviceManager.CompanyService.GetByIds(ids, trackChanges: false);
             return Ok(companies);

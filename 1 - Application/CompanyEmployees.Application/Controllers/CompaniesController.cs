@@ -48,5 +48,13 @@ namespace CompanyEmployees.Application.Controllers
 
             return CreatedAtRoute("GetCompany", new { id = createdCompany.Id }, createdCompany);
         }
+
+        [HttpPost("collection")]
+        public IActionResult CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
+        {
+            var result = _serviceManager.CompanyService.CreateCompanyCollection(companyCollection);
+
+            return CreatedAtRoute("GetCompanyCollection", new { result.ids }, result.companies);
+        }
     }
 }

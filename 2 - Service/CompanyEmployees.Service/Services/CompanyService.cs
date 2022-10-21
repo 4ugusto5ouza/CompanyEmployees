@@ -57,17 +57,37 @@ namespace CompanyEmployees.Service.Services
 
         public IEnumerable<CompanyDto> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
         {
-            if (ids is null)            
+            if (ids is null)
                 throw new IdParametersBadRequestException();
 
             var companyEntities = _repository.CompanyRepository.GetByIds(ids, trackChanges);
 
             if (ids.Count() != companyEntities.Count())
                 throw new CollectionByIdsRequestException();
-            
+
             var companiesToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
 
             return companiesToReturn;
+        }
+
+        public (IEnumerable<CompanyDto> companies, string ids) CreateCompanyCollection(IEnumerable<CompanyForCreationDto> companyCollection)
+        {
+            if (companyCollection is null)
+                throw new CompanyCollectionBadRequestException();
+
+            var companyEntities = _mapper.Map<IEnumerable<Company>>(companyCollection);
+
+            foreach (var company in companyEntities)
+            {
+                _repository.CompanyRepository.CreateCompany(company);
+            }
+
+            _repository.Save();
+
+            var companyCollectionToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
+            var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
+
+            return (companyCollectionToReturn, ids);
         }
     }
 }

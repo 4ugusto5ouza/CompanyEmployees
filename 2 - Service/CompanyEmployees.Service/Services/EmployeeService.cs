@@ -68,7 +68,22 @@ namespace CompanyEmployees.Service.Services
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
 
             return employeeToReturn;
-            throw new NotImplementedException();
+        }
+
+        public void DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackChanges)
+        {
+            var company = _repository.CompanyRepository.GetCompany(companyId, trackChanges);
+
+            if (company is null)
+                throw new CompanyNotFoundException(companyId);
+
+            var employeeForCompany = _repository.EmployeeRepository.GetEmployee(companyId, id, trackChanges);
+
+            if (employeeForCompany is null)
+                throw new EmployeeNotFoundException(id);
+
+            _repository.EmployeeRepository.DeleteEmployee(employeeForCompany);
+            _repository.Save();
         }
     }
 }

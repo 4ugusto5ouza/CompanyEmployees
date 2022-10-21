@@ -43,18 +43,6 @@ namespace CompanyEmployees.Service.Services
             return companyDto;
         }
 
-        public CompanyDto CreateCompany(CompanyForCreationDto company)
-        {
-            var companyEntity = _mapper.Map<Company>(company);
-
-            _repository.CompanyRepository.CreateCompany(companyEntity);
-            _repository.Save();
-
-            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
-
-            return companyToReturn;
-        }
-
         public IEnumerable<CompanyDto> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
         {
             if (ids is null)
@@ -68,6 +56,18 @@ namespace CompanyEmployees.Service.Services
             var companiesToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
 
             return companiesToReturn;
+        }
+
+        public CompanyDto CreateCompany(CompanyForCreationDto company)
+        {
+            var companyEntity = _mapper.Map<Company>(company);
+
+            _repository.CompanyRepository.CreateCompany(companyEntity);
+            _repository.Save();
+
+            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+
+            return companyToReturn;
         }
 
         public (IEnumerable<CompanyDto> companies, string ids) CreateCompanyCollection(IEnumerable<CompanyForCreationDto> companyCollection)
@@ -88,6 +88,17 @@ namespace CompanyEmployees.Service.Services
             var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
 
             return (companyCollectionToReturn, ids);
+        }
+
+        public void UpdateCompany(Guid companyId, CompanyForUpdateDto companyForUpdate, bool trackChanges)
+        {
+            var companyEntity = _repository.CompanyRepository.GetCompany(companyId, trackChanges);
+            if (companyEntity is null)
+                throw new CompanyNotFoundException(companyId);
+
+            _mapper.Map(companyForUpdate,companyEntity);
+
+            _repository.Save();
         }
 
         public void DeleteCompany(Guid companyId, bool trackChanges)

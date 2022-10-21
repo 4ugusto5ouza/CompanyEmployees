@@ -2,6 +2,7 @@
 using CompanyEmployees.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace CompanyEmployees.Application.Controllers
 {
@@ -20,6 +21,13 @@ namespace CompanyEmployees.Application.Controllers
         public IActionResult GetCompanies()
         {
             var companies = _serviceManager.CompanyService.GetAllCompanies(trackChanges: false);
+            return Ok(companies);
+        }
+
+        [HttpGet("collection/({ids})", Name = "GetCompanyCollection")]
+        public IActionResult GetCompanyColletion(IEnumerable<Guid> ids)
+        {
+            var companies = _serviceManager.CompanyService.GetByIds(ids, trackChanges: false);
             return Ok(companies);
         }
 

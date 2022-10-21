@@ -6,6 +6,7 @@ using CompanyEmployees.Service.DataTransferObjects;
 using CompanyEmployees.Service.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CompanyEmployees.Service.Services
 {
@@ -52,6 +53,21 @@ namespace CompanyEmployees.Service.Services
             var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
 
             return companyToReturn;
+        }
+
+        public IEnumerable<CompanyDto> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
+        {
+            if (ids is null)            
+                throw new IdParametersBadRequestException();
+
+            var companyEntities = _repository.CompanyRepository.GetByIds(ids, trackChanges);
+
+            if (ids.Count() != companyEntities.Count())
+                throw new CollectionByIdsRequestException();
+            
+            var companiesToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
+
+            return companiesToReturn;
         }
     }
 }

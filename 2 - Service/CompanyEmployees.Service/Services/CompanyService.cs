@@ -89,5 +89,15 @@ namespace CompanyEmployees.Service.Services
 
             return (companyCollectionToReturn, ids);
         }
+
+        public void DeleteCompany(Guid companyId, bool trackChanges)
+        {
+            var company = _repository.CompanyRepository.GetCompany(companyId, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(companyId);
+
+            _repository.CompanyRepository.DeleteCompany(company);
+            _repository.Save();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CompanyEmployees.Domain.Entities;
-using CompanyEmployees.Service.DataTransferObjects;
+using CompanyEmployees.Service.DataTransferObjects.Companies;
+using CompanyEmployees.Service.DataTransferObjects.Employees;
 
 namespace CompanyEmployees.Service.Mappings
 {
@@ -11,11 +12,11 @@ namespace CompanyEmployees.Service.Mappings
             CreateMap<Company, CompanyDto>()
                 .ForMember(c => c.FullAddress, 
                     opt => opt.MapFrom(x => string.Join(" ", x.Address, x.Country)));
-
             CreateMap<CompanyForCreationDto, Company>();
 
             CreateMap<Employee, EmployeeDto>();
             CreateMap<EmployeeForCreationDto, Employee>();
+            CreateMap<EmployeeForUpdateDto, Employee>();
         }
     }
 }

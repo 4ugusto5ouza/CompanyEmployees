@@ -2,7 +2,7 @@
 using CompanyEmployees.Domain.Entities;
 using CompanyEmployees.Domain.Exceptions;
 using CompanyEmployees.Domain.Interfaces;
-using CompanyEmployees.Service.DataTransferObjects;
+using CompanyEmployees.Service.DataTransferObjects.Companies;
 using CompanyEmployees.Service.Interfaces;
 using System;
 using System.Collections.Generic;

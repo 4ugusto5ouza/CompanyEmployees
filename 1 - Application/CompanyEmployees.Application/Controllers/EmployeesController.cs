@@ -1,4 +1,4 @@
-﻿using CompanyEmployees.Service.DataTransferObjects;
+﻿using CompanyEmployees.Service.DataTransferObjects.Employees;
 using CompanyEmployees.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -41,6 +41,13 @@ namespace CompanyEmployees.Application.Controllers
             var employeeToReturn = _service.EmployeeService.CreateEmployeeForCompany(companyId, employee, trackChanges: false);
 
             return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
+        }
+
+        [HttpPut("{id:guid}")]
+        public IActionResult UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
+        {
+            _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee, compTrackChanges: false, empTrackChanges: true);
+            return NoContent();
         }
 
         [HttpDelete("{id:guid}")]

@@ -1,4 +1,4 @@
-﻿using CompanyEmployees.Service.DataTransferObjects;
+﻿using CompanyEmployees.Service.DataTransferObjects.Companies;
 using System;
 using System.Collections.Generic;
 

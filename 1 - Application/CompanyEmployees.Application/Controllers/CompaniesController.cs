@@ -1,5 +1,5 @@
 ﻿using CompanyEmployees.Application.ModelBinders;
-using CompanyEmployees.Service.DataTransferObjects;
+using CompanyEmployees.Service.DataTransferObjects.Companies;
 using CompanyEmployees.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;

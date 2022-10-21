@@ -1,4 +1,4 @@
-﻿using CompanyEmployees.Service.DataTransferObjects;
+﻿using CompanyEmployees.Service.DataTransferObjects.Companies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;

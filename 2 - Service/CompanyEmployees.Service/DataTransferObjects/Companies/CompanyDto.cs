@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace CompanyEmployees.Service.DataTransferObjects
+namespace CompanyEmployees.Service.DataTransferObjects.Companies
 {
-    public record CompanyDto { 
+    public record CompanyDto
+    {
         public Guid Id { get; init; }
         public string? Name { get; init; }
         public string? FullAddress { get; init; }

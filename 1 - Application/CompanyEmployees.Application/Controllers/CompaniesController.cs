@@ -45,6 +45,10 @@ namespace CompanyEmployees.Application.Controllers
             if (company is null)
                 return BadRequest("CompanyForCreationDto object is null");
 
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
             var createdCompany = _serviceManager.CompanyService.CreateCompany(company);
 
             return CreatedAtRoute("GetCompany", new { id = createdCompany.Id }, createdCompany);
@@ -63,6 +67,10 @@ namespace CompanyEmployees.Application.Controllers
         {
             if (company is null)
                 return BadRequest("CompanyForUpdateDto object is null");
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
 
             _serviceManager.CompanyService.UpdateCompany(id, company, trackChanges: true);
             

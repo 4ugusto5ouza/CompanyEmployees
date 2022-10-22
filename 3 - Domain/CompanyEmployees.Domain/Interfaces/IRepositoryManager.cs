@@ -1,4 +1,5 @@
 ﻿using CompanyEmployees.Domain.Interfaces.Repositories;
+using System.Threading.Tasks;
 
 namespace CompanyEmployees.Domain.Interfaces
 {
@@ -7,6 +8,6 @@ namespace CompanyEmployees.Domain.Interfaces
         ICompanyRepository CompanyRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
 
-        void Save();
+        Task SaveAsync();
     }
 }

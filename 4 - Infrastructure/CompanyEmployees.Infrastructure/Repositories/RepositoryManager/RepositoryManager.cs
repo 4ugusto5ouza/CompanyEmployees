@@ -2,6 +2,7 @@
 using CompanyEmployees.Domain.Interfaces.Repositories;
 using CompanyEmployees.Infrastructure.Context;
 using System;
+using System.Threading.Tasks;
 
 namespace CompanyEmployees.Infrastructure.Repositories.RepositoryManager
 {
@@ -20,9 +21,9 @@ namespace CompanyEmployees.Infrastructure.Repositories.RepositoryManager
         public ICompanyRepository CompanyRepository => _companyRepository.Value;
         public IEmployeeRepository EmployeeRepository => _employeeRepository.Value;
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _companyEmployeesContext.SaveChanges();
+            await _companyEmployeesContext.SaveChangesAsync();
         }
     }
 }

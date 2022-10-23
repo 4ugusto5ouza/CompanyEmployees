@@ -1,4 +1,5 @@
 ﻿using CompanyEmployees.Application.ActionFilters;
+using CompanyEmployees.Domain.Parameters;
 using CompanyEmployees.Service.DataTransferObjects.Employees;
 using CompanyEmployees.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,9 @@ namespace CompanyEmployees.Application.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
+        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
-            var employees = await _service.EmployeeService.GetEmployeesAsync(companyId, trackChanges: false);
+            var employees = await _service.EmployeeService.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
 
             return Ok(employees);
         }

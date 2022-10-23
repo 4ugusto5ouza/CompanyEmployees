@@ -18,23 +18,29 @@ namespace CompanyEmployees.Infrastructure.Repositories
         {
         }
 
-        private IQueryable<Employee> GetEmployeesByCompanyConditionAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
+        private IQueryable<Employee> GetEmployeesAsyncFilters(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
-            var queryableEmployeesByCondition = FindByCondition(e => e.CompanyId.Equals(companyId)
-                                    && (e.Age >= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge), trackChanges);
+            var queryableEmployees = FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges);
 
-            return queryableEmployeesByCondition;
+            queryableEmployees = queryableEmployees.Where(e => e.Age >= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge);
+
+            if (!string.IsNullOrEmpty(employeeParameters.SearchName))
+            {
+                queryableEmployees = queryableEmployees.Where(e => e.Name.ToLower().Contains(employeeParameters.SearchName.ToLower()));
+            }
+
+            return queryableEmployees;
         }
 
         public async Task<PagedList<Employee>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
-            var employees = await GetEmployeesByCompanyConditionAsync(companyId, employeeParameters, trackChanges)
+            var employees = await GetEmployeesAsyncFilters(companyId, employeeParameters, trackChanges)
                                     .OrderBy(e => e.Name)
                                     .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
                                     .Take(employeeParameters.PageSize)
                                     .ToListAsync();
 
-            var count = await GetEmployeesByCompanyConditionAsync(companyId, employeeParameters, trackChanges).CountAsync();
+            var count = await GetEmployeesAsyncFilters(companyId, employeeParameters, trackChanges).CountAsync();
 
             return new PagedList<Employee>(employees, count, employeeParameters.PageNumber, employeeParameters.PageSize);
         }

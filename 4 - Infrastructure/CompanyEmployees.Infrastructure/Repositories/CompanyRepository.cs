@@ -1,5 +1,7 @@
 ﻿using CompanyEmployees.Domain.Entities;
 using CompanyEmployees.Domain.Interfaces.Repositories;
+using CompanyEmployees.Domain.RequestFeatures;
+using CompanyEmployees.Domain.RequestFeatures.Parameters;
 using CompanyEmployees.Infrastructure.Context;
 using CompanyEmployees.Infrastructure.RepositoryBase;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +19,17 @@ namespace CompanyEmployees.Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges)
+        public async Task<PagedList<Company>> GetAllCompaniesAsync(CompanyParameters companyParameters, bool trackChanges)
         {
-            return await FindAll(trackChanges)
-                    .OrderBy(c => c.Name)
-                    .ToListAsync();
+            var companies = await FindAll(trackChanges)
+                                    .OrderBy(c => c.Name)
+                                    .Skip((companyParameters.PageNumber - 1) * companyParameters.PageSize)
+                                    .Take(companyParameters.PageSize)
+                                    .ToListAsync();
+
+            var count = await FindAll(trackChanges).CountAsync();
+
+            return new PagedList<Company>(companies, count, companyParameters.PageNumber, companyParameters.PageSize);
         }
         public async Task<IEnumerable<Company>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges)
         {
@@ -30,7 +38,7 @@ namespace CompanyEmployees.Infrastructure.Repositories
 
         public async Task<Company> GetCompanyAsync(Guid companyId, bool trackChanges)
         {
-            return  await FindByCondition(c => c.Id.Equals(companyId), trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(c => c.Id.Equals(companyId), trackChanges).SingleOrDefaultAsync();
         }
 
         public void CreateCompany(Company company) => Create(company);

@@ -47,11 +47,11 @@ namespace CompanyEmployees.Service.Services
         {
             await CheckIfCompanyExists(companyId, trackChanges);
 
-            var employeesWithMetadata = await _repository.EmployeeRepository.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
+            var employeesWithMetaData = await _repository.EmployeeRepository.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
 
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetadata);
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
 
-            return (employees: employeesDto, metaData: employeesWithMetadata.MetaData);
+            return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
         }
 
         public async Task<EmployeeDto> GetEmployeeAsync(Guid companyId, Guid id, bool trackChanges)

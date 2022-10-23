@@ -2,6 +2,8 @@
 using CompanyEmployees.Domain.Entities;
 using CompanyEmployees.Domain.Exceptions;
 using CompanyEmployees.Domain.Interfaces;
+using CompanyEmployees.Domain.RequestFeatures;
+using CompanyEmployees.Domain.RequestFeatures.Parameters;
 using CompanyEmployees.Service.DataTransferObjects.Companies;
 using CompanyEmployees.Service.Interfaces;
 using System;
@@ -33,13 +35,13 @@ namespace CompanyEmployees.Service.Services
             return company;
         }
 
-        public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
+        public async Task<(IEnumerable<CompanyDto> companies, MetaData metaData)> GetAllCompaniesAsync(CompanyParameters companyParameters, bool trackChanges)
         {
-            var companies = await _repository.CompanyRepository.GetAllCompaniesAsync(trackChanges);
+            var companiesWithMetaData = await _repository.CompanyRepository.GetAllCompaniesAsync(companyParameters, trackChanges);
 
-            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companiesWithMetaData);
 
-            return companiesDto;
+            return (companies: companiesDto, metaData: companiesWithMetaData.MetaData);
         }
 
         public async Task<CompanyDto> GetCompanyAsync(Guid id, bool trackChanges)

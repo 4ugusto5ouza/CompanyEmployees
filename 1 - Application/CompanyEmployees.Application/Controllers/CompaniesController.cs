@@ -1,10 +1,12 @@
 ﻿using CompanyEmployees.Application.ActionFilters;
 using CompanyEmployees.Application.ModelBinders;
+using CompanyEmployees.Domain.RequestFeatures.Parameters;
 using CompanyEmployees.Service.DataTransferObjects.Companies;
 using CompanyEmployees.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CompanyEmployees.Application.Controllers
@@ -21,10 +23,13 @@ namespace CompanyEmployees.Application.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanies()
+        public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
         {
-            var companies = await _serviceManager.CompanyService.GetAllCompaniesAsync(trackChanges: false);
-            return Ok(companies);
+            var pagedResult = await _serviceManager.CompanyService.GetAllCompaniesAsync(companyParameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+
+            return Ok(pagedResult.companies);
         }
 
         [HttpGet("collection/({ids})", Name = "GetCompanyCollection")]

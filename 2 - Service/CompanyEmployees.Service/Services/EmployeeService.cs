@@ -2,7 +2,8 @@
 using CompanyEmployees.Domain.Entities;
 using CompanyEmployees.Domain.Exceptions;
 using CompanyEmployees.Domain.Interfaces;
-using CompanyEmployees.Domain.Parameters;
+using CompanyEmployees.Domain.RequestFeatures;
+using CompanyEmployees.Domain.RequestFeatures.Parameters;
 using CompanyEmployees.Service.DataTransferObjects.Employees;
 using CompanyEmployees.Service.Interfaces;
 using System;
@@ -42,15 +43,15 @@ namespace CompanyEmployees.Service.Services
             return employee;
         }
 
-        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
+        public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
             await CheckIfCompanyExists(companyId, trackChanges);
 
-            var employeesFromDb = await _repository.EmployeeRepository.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
+            var employeesWithMetadata = await _repository.EmployeeRepository.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
 
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetadata);
 
-            return employeesDto;
+            return (employees: employeesDto, metaData: employeesWithMetadata.MetaData);
         }
 
         public async Task<EmployeeDto> GetEmployeeAsync(Guid companyId, Guid id, bool trackChanges)

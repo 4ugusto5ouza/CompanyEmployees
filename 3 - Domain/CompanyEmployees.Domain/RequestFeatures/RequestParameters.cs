@@ -1,4 +1,4 @@
-﻿namespace CompanyEmployees.Domain.Parameters.ParametersBase
+﻿namespace CompanyEmployees.Domain.RequestFeatures
 {
     public abstract class RequestParameters
     {
@@ -9,7 +9,7 @@
         public int PageSize
         {
             get { return _pageSize; }
-            set { _pageSize = (value > maxPageSize) ? maxPageSize : value; }
+            set { _pageSize = value > maxPageSize ? maxPageSize : value; }
         }
     }
 }

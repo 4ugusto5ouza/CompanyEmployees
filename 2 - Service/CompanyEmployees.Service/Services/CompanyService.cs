@@ -24,6 +24,15 @@ namespace CompanyEmployees.Service.Services
             _mapper = mapper;
         }
 
+        private async Task<Company> GetCompanyAndCheckIfItExist(Guid id, bool trackChanges)
+        {
+            var company = await _repository.CompanyRepository.GetCompanyAsync(id, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(id);
+
+            return company;
+        }
+
         public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
         {
             var companies = await _repository.CompanyRepository.GetAllCompaniesAsync(trackChanges);
@@ -35,9 +44,7 @@ namespace CompanyEmployees.Service.Services
 
         public async Task<CompanyDto> GetCompanyAsync(Guid id, bool trackChanges)
         {
-            var company = await _repository.CompanyRepository.GetCompanyAsync(id, trackChanges);
-            if (company is null)
-                throw new CompanyNotFoundException(id);
+            var company = await GetCompanyAndCheckIfItExist(id, trackChanges);
 
             var companyDto = _mapper.Map<CompanyDto>(company);
 
@@ -93,9 +100,7 @@ namespace CompanyEmployees.Service.Services
 
         public async Task UpdateCompanyAsync(Guid companyId, CompanyForUpdateDto companyForUpdate, bool trackChanges)
         {
-            var companyEntity = await _repository.CompanyRepository.GetCompanyAsync(companyId, trackChanges);
-            if (companyEntity is null)
-                throw new CompanyNotFoundException(companyId);
+            var companyEntity = await GetCompanyAndCheckIfItExist(companyId, trackChanges);
 
             _mapper.Map(companyForUpdate, companyEntity);
 
@@ -104,9 +109,7 @@ namespace CompanyEmployees.Service.Services
 
         public async Task DeleteCompanyAsync(Guid companyId, bool trackChanges)
         {
-            var company = await _repository.CompanyRepository.GetCompanyAsync(companyId, trackChanges);
-            if (company is null)
-                throw new CompanyNotFoundException(companyId);
+            var company = await GetCompanyAndCheckIfItExist(companyId, trackChanges);
 
             _repository.CompanyRepository.DeleteCompany(company);
             await _repository.SaveAsync();

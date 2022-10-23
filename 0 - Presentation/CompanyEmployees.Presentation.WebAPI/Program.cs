@@ -1,3 +1,4 @@
+using CompanyEmployees.Application.ActionFilters;
 using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Presentation.WebAPI.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -35,6 +36,9 @@ builder.Services.AddControllers(config =>
 builder.Services.ConfigureSQLContext(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddScoped<ValidationFilterAttribute>();
+
 
 var app = builder.Build();
 

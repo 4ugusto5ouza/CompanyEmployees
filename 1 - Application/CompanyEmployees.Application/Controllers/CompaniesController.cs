@@ -22,6 +22,14 @@ namespace CompanyEmployees.Application.Controllers
             _serviceManager = serviceManager;
         }
 
+        [HttpOptions]
+        public IActionResult GetCompaniesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT, DELETE");
+
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
         {

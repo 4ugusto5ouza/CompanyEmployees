@@ -31,6 +31,7 @@ namespace CompanyEmployees.Application.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
         {
             var pagedResult = await _serviceManager.CompanyService.GetAllCompaniesAsync(companyParameters, trackChanges: false);

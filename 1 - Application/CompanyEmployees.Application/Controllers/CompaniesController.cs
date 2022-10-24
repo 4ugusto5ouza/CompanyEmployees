@@ -13,7 +13,6 @@ namespace CompanyEmployees.Application.Controllers
 {
     [Route("api/companies")]
     [ApiController]
-    [ResponseCache(CacheProfileName ="120SecondsDuration")]
     public class CompaniesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -50,7 +49,6 @@ namespace CompanyEmployees.Application.Controllers
         }
 
         [HttpGet("{id:guid}", Name = "GetCompany")]
-        [ResponseCache(Duration = 60)]
         public async Task<IActionResult> GetCompany(Guid id)
         {
             var company = await _serviceManager.CompanyService.GetCompanyAsync(id, trackChanges: false);

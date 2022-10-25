@@ -5,6 +5,7 @@ using CompanyEmployees.Presentation.WebAPI.CustomFormatters;
 using CompanyEmployees.Service.Interfaces;
 using CompanyEmployees.Service.Logger;
 using CompanyEmployees.Service.Services.ServiceManager;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,20 +25,20 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
                        .WithExposedHeaders("X-Pagination"));
             });
 
-        public static void ConfigureIISIntegration(this IServiceCollection services) => 
+        public static void ConfigureIISIntegration(this IServiceCollection services) =>
             services.Configure<IISOptions>(options => { });
 
-        public static void ConfigureLoggerService(this IServiceCollection services) => 
+        public static void ConfigureLoggerService(this IServiceCollection services) =>
             services.AddSingleton<ILoggerManager, LoggerManager>();
 
-        public static void ConfigureRepositoryManager(this IServiceCollection services) => 
+        public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
         public static void ConfigureServiceManager(this IServiceCollection services) =>
             services.AddScoped<IServiceManager, ServiceManager>();
 
-        public static void ConfigureSQLContext(this IServiceCollection services, IConfiguration configuration) => 
-            services.AddDbContext<CompanyEmployeesContext>(opts => 
+        public static void ConfigureSQLContext(this IServiceCollection services, IConfiguration configuration) =>
+            services.AddDbContext<CompanyEmployeesContext>(opts =>
                     opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
 
         public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
@@ -47,7 +48,15 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
             services.AddResponseCaching();
 
         public static void ConfigureHttpCacheHeaders(this IServiceCollection services) =>
-            services.AddHttpCacheHeaders();
+            services.AddHttpCacheHeaders(
+                (expirationOpt) =>
+            {
+                expirationOpt.MaxAge = 60;
+                expirationOpt.CacheLocation = CacheLocation.Private;
+            }, (validationOpt) =>
+            {
+                validationOpt.MustRevalidate = true;
+            });
 
     }
 }

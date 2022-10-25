@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using CompanyEmployees.Application.ActionFilters;
 using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Presentation.WebAPI.Extensions;
@@ -21,6 +22,9 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureResponseCaching();
 builder.Services.ConfigureHttpCacheHeaders();
+builder.Services.AddMemoryCache();
+builder.Services.ConfigureRateLimitOptions();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.Configure<ApiBehaviorOptions>(opt =>
 {
@@ -61,10 +65,13 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.All
 });
 
+
 app.UseCors("CorsPolicy");
 
 app.UseResponseCaching();
 app.UseHttpCacheHeaders();
+
+app.UseIpRateLimiting();
 
 app.UseAuthorization();
 

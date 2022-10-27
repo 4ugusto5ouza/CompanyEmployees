@@ -2,6 +2,7 @@
 using CompanyEmployees.Domain.Entities;
 using CompanyEmployees.Service.DataTransferObjects.Companies;
 using CompanyEmployees.Service.DataTransferObjects.Employees;
+using CompanyEmployees.Service.DataTransferObjects.Users;
 
 namespace CompanyEmployees.Service.Mappings
 {
@@ -18,6 +19,8 @@ namespace CompanyEmployees.Service.Mappings
             CreateMap<Employee, EmployeeDto>();
             CreateMap<EmployeeForCreationDto, Employee>();
             CreateMap<EmployeeForUpdateDto, Employee>();
+
+            CreateMap<UserForRegistrationDto, User>();
         }
     }
 }

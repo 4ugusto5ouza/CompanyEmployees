@@ -25,9 +25,16 @@ namespace CompanyEmployees.Service.Services
             _configuration = configuration;
         }
 
-        public Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
+        public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
         {
-            throw new System.NotImplementedException();
+            var user = _mapper.Map<User>(userForRegistration);
+
+            var result = await _userManager.CreateAsync(user, userForRegistration.Password);
+
+            if (result.Succeeded)
+                await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
+
+            return result;
         }
     }
 }

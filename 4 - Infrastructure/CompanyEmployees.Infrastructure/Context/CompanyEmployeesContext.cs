@@ -18,6 +18,7 @@ namespace CompanyEmployees.Infrastructure.Context
 
             modelBuilder.ApplyConfiguration(new CompanyConfiguration()); 
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new IdentityRoleConfiguration());
         }
 
         DbSet<Company>? Companies { get; set; }

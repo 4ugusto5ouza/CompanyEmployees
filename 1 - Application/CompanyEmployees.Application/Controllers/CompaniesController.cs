@@ -34,7 +34,7 @@ namespace CompanyEmployees.Application.Controllers
         [HttpHead]
         public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
         {
-            var pagedResult = await _serviceManager.CompanyService.GetAllCompaniesAsync(companyParameters, trackChanges: false);
+            var pagedResult = await _serviceManager.Company.GetAllCompaniesAsync(companyParameters, trackChanges: false);
 
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
@@ -44,14 +44,14 @@ namespace CompanyEmployees.Application.Controllers
         [HttpGet("collection/({ids})", Name = "GetCompanyCollection")]
         public async Task<IActionResult> GetCompanyColletion([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
-            var companies = await _serviceManager.CompanyService.GetByIdsAsync(ids, trackChanges: false);
+            var companies = await _serviceManager.Company.GetByIdsAsync(ids, trackChanges: false);
             return Ok(companies);
         }
 
         [HttpGet("{id:guid}", Name = "GetCompany")]
         public async Task<IActionResult> GetCompany(Guid id)
         {
-            var company = await _serviceManager.CompanyService.GetCompanyAsync(id, trackChanges: false);
+            var company = await _serviceManager.Company.GetCompanyAsync(id, trackChanges: false);
             return Ok(company);
         }
 
@@ -59,7 +59,7 @@ namespace CompanyEmployees.Application.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
-            var createdCompany = await _serviceManager.CompanyService.CreateCompanyAsync(company);
+            var createdCompany = await _serviceManager.Company.CreateCompanyAsync(company);
 
             return CreatedAtRoute("GetCompany", new { id = createdCompany.Id }, createdCompany);
         }
@@ -67,7 +67,7 @@ namespace CompanyEmployees.Application.Controllers
         [HttpPost("collection")]
         public async Task<IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
         {
-            var result = await _serviceManager.CompanyService.CreateCompanyCollectionAsync(companyCollection);
+            var result = await _serviceManager.Company.CreateCompanyCollectionAsync(companyCollection);
 
             return CreatedAtRoute("GetCompanyCollection", new { result.ids }, result.companies);
         }
@@ -76,7 +76,7 @@ namespace CompanyEmployees.Application.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
         {
-            await _serviceManager.CompanyService.UpdateCompanyAsync(id, company, trackChanges: true);
+            await _serviceManager.Company.UpdateCompanyAsync(id, company, trackChanges: true);
 
             return NoContent();
         }
@@ -84,7 +84,7 @@ namespace CompanyEmployees.Application.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteCompany(Guid id, bool trackChanges)
         {
-            await _serviceManager.CompanyService.DeleteCompanyAsync(id, trackChanges);
+            await _serviceManager.Company.DeleteCompanyAsync(id, trackChanges);
 
             return NoContent();
         }

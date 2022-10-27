@@ -18,8 +18,8 @@ namespace CompanyEmployees.Infrastructure.Repositories.RepositoryManager
             _employeeRepository = new Lazy<IEmployeeRepository>(() => new EmployeeRepository(companyEmployeesContext));
         }
 
-        public ICompanyRepository CompanyRepository => _companyRepository.Value;
-        public IEmployeeRepository EmployeeRepository => _employeeRepository.Value;
+        public ICompanyRepository Company => _companyRepository.Value;
+        public IEmployeeRepository Employee => _employeeRepository.Value;
 
         public async Task SaveAsync()
         {

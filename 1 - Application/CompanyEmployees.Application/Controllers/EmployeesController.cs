@@ -32,7 +32,7 @@ namespace CompanyEmployees.Application.Controllers
         [HttpHead]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
-            var pagedResult = await _service.EmployeeService.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
+            var pagedResult = await _service.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
 
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
@@ -42,7 +42,7 @@ namespace CompanyEmployees.Application.Controllers
         [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]
         public async Task<IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
         {
-            var employee = await _service.EmployeeService.GetEmployeeAsync(companyId, id, trackChanges: false);
+            var employee = await _service.Employee.GetEmployeeAsync(companyId, id, trackChanges: false);
 
             return Ok(employee);
         }
@@ -51,7 +51,7 @@ namespace CompanyEmployees.Application.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
         {
-            var employeeToReturn = await _service.EmployeeService.CreateEmployeeForCompanyAsync(companyId, employee, trackChanges: false);
+            var employeeToReturn = await _service.Employee.CreateEmployeeForCompanyAsync(companyId, employee, trackChanges: false);
 
             return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
         }
@@ -60,7 +60,7 @@ namespace CompanyEmployees.Application.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
         {
-            await _service.EmployeeService.UpdateEmployeeForCompanyAsync(companyId, id, employee, compTrackChanges: false, empTrackChanges: true);
+            await _service.Employee.UpdateEmployeeForCompanyAsync(companyId, id, employee, compTrackChanges: false, empTrackChanges: true);
 
             return NoContent();
         }
@@ -68,7 +68,7 @@ namespace CompanyEmployees.Application.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
         {
-            await _service.EmployeeService.DeleteEmployeeForCompanyAsync(companyId, id, trackChanges: false);
+            await _service.Employee.DeleteEmployeeForCompanyAsync(companyId, id, trackChanges: false);
 
             return NoContent();
         }

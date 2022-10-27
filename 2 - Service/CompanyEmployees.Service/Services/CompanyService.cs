@@ -28,7 +28,7 @@ namespace CompanyEmployees.Service.Services
 
         private async Task<Company> GetCompanyAndCheckIfItExist(Guid id, bool trackChanges)
         {
-            var company = await _repository.CompanyRepository.GetCompanyAsync(id, trackChanges);
+            var company = await _repository.Company.GetCompanyAsync(id, trackChanges);
             if (company is null)
                 throw new CompanyNotFoundException(id);
 
@@ -37,7 +37,7 @@ namespace CompanyEmployees.Service.Services
 
         public async Task<(IEnumerable<CompanyDto> companies, MetaData metaData)> GetAllCompaniesAsync(CompanyParameters companyParameters, bool trackChanges)
         {
-            var companiesWithMetaData = await _repository.CompanyRepository.GetAllCompaniesAsync(companyParameters, trackChanges);
+            var companiesWithMetaData = await _repository.Company.GetAllCompaniesAsync(companyParameters, trackChanges);
 
             var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companiesWithMetaData);
 
@@ -58,7 +58,7 @@ namespace CompanyEmployees.Service.Services
             if (ids is null)
                 throw new IdParametersBadRequestException();
 
-            var companyEntities = await _repository.CompanyRepository.GetByIdsAsync(ids, trackChanges);
+            var companyEntities = await _repository.Company.GetByIdsAsync(ids, trackChanges);
 
             if (ids.Count() != companyEntities.Count())
                 throw new CollectionByIdsRequestException();
@@ -72,7 +72,7 @@ namespace CompanyEmployees.Service.Services
         {
             var companyEntity = _mapper.Map<Company>(company);
 
-            _repository.CompanyRepository.CreateCompany(companyEntity);
+            _repository.Company.CreateCompany(companyEntity);
             await _repository.SaveAsync();
 
             var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
@@ -89,7 +89,7 @@ namespace CompanyEmployees.Service.Services
 
             foreach (var company in companyEntities)
             {
-                _repository.CompanyRepository.CreateCompany(company);
+                _repository.Company.CreateCompany(company);
             }
 
             await _repository.SaveAsync();
@@ -113,7 +113,7 @@ namespace CompanyEmployees.Service.Services
         {
             var company = await GetCompanyAndCheckIfItExist(companyId, trackChanges);
 
-            _repository.CompanyRepository.DeleteCompany(company);
+            _repository.Company.DeleteCompany(company);
             await _repository.SaveAsync();
         }
     }

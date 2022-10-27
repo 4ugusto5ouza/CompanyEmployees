@@ -27,7 +27,7 @@ namespace CompanyEmployees.Service.Services
 
         private async Task CheckIfCompanyExists(Guid companyId, bool trackChanges)
         {
-            var company = await _repository.CompanyRepository.GetCompanyAsync(companyId, trackChanges);
+            var company = await _repository.Company.GetCompanyAsync(companyId, trackChanges);
 
             if (company is null)
                 throw new CompanyNotFoundException(companyId);
@@ -35,7 +35,7 @@ namespace CompanyEmployees.Service.Services
 
         private async Task<Employee> GetEmployeeForCompanyAndCheckIfItExists(Guid companyId, Guid id, bool trackChanges)
         {
-            var employee = await _repository.EmployeeRepository.GetEmployeeAsync(companyId, id, trackChanges);
+            var employee = await _repository.Employee.GetEmployeeAsync(companyId, id, trackChanges);
 
             if (employee is null)
                 throw new EmployeeNotFoundException(id);
@@ -49,7 +49,7 @@ namespace CompanyEmployees.Service.Services
                 throw new MaxAgeRangeBadRequestException();
             await CheckIfCompanyExists(companyId, trackChanges);
 
-            var employeesWithMetaData = await _repository.EmployeeRepository.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
+            var employeesWithMetaData = await _repository.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
 
@@ -73,7 +73,7 @@ namespace CompanyEmployees.Service.Services
 
             var employeeEntity = _mapper.Map<Employee>(employeeForCreation);
 
-            _repository.EmployeeRepository.CreateEmployeeForCompany(companyId, employeeEntity);
+            _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
             await _repository.SaveAsync();
 
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
@@ -98,7 +98,7 @@ namespace CompanyEmployees.Service.Services
 
             var employeeForCompany = await GetEmployeeForCompanyAndCheckIfItExists(companyId, id, trackChanges);
 
-            _repository.EmployeeRepository.DeleteEmployee(employeeForCompany);
+            _repository.Employee.DeleteEmployee(employeeForCompany);
             await _repository.SaveAsync();
         }
     }

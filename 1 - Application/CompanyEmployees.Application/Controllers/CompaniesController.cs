@@ -3,6 +3,7 @@ using CompanyEmployees.Application.ModelBinders;
 using CompanyEmployees.Domain.RequestFeatures.Parameters;
 using CompanyEmployees.Service.DataTransferObjects.Companies;
 using CompanyEmployees.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,9 @@ namespace CompanyEmployees.Application.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetCompanies")]
         [HttpHead]
+        [Authorize]
         public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
         {
             var pagedResult = await _serviceManager.Company.GetAllCompaniesAsync(companyParameters, trackChanges: false);

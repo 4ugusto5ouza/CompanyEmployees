@@ -1,4 +1,5 @@
 ﻿using AspNetCoreRateLimit;
+using CompanyEmployees.Domain.Entities;
 using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Infrastructure.Context;
 using CompanyEmployees.Infrastructure.Repositories.RepositoryManager;
@@ -8,6 +9,7 @@ using CompanyEmployees.Service.Logger;
 using CompanyEmployees.Service.Services.ServiceManager;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -81,6 +83,20 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentity<User, IdentityRole>(opt =>
+            {
+                opt.Password.RequireDigit = true;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredLength = 8;
+                opt.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<CompanyEmployeesContext>()
+              .AddDefaultTokenProviders();
         }
     }
 }

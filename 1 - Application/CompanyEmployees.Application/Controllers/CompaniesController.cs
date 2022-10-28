@@ -33,7 +33,7 @@ namespace CompanyEmployees.Application.Controllers
 
         [HttpGet(Name = "GetCompanies")]
         [HttpHead]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
         {
             var pagedResult = await _serviceManager.Company.GetAllCompaniesAsync(companyParameters, trackChanges: false);

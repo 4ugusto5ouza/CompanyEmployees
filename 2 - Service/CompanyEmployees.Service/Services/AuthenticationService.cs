@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CompanyEmployees.Domain.Entities;
+using CompanyEmployees.Domain.Exceptions.ExceptionsBase;
 using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Service.DataTransferObjects.Users;
 using CompanyEmployees.Service.Interfaces;
@@ -57,7 +58,7 @@ namespace CompanyEmployees.Service.Services
             return result;
         }
 
-        public async Task<TokenDto> CreateToken(bool populataeExp)
+        public async Task<TokenDto> CreateToken(bool populateExp)
         {
             var signingCredentials = GetSigningCredentials();
             var claims = await GetClaims();
@@ -67,7 +68,7 @@ namespace CompanyEmployees.Service.Services
 
             _user.RefreshToken = refreshToken;
 
-            if (populataeExp)
+            if (populateExp)
                 _user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
 
             await _userManager.UpdateAsync(_user);
@@ -155,6 +156,20 @@ namespace CompanyEmployees.Service.Services
             }
 
             return principal;
+        }
+
+        public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
+        {
+            var principal = GetPrincinpalFromExpiredToken(tokenDto.AccessToken);
+
+            var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+
+            if (user == null || user.RefreshToken != tokenDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                throw new RefreshTokenBadRequest();
+
+            _user = user;
+
+            return await CreateToken(populateExp: false);
         }
     }
 }

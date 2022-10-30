@@ -1,4 +1,5 @@
 ﻿using AspNetCoreRateLimit;
+using CompanyEmployees.Domain.ConfigurationModels;
 using CompanyEmployees.Domain.Entities;
 using CompanyEmployees.Domain.Interfaces;
 using CompanyEmployees.Infrastructure.Context;
@@ -105,7 +106,10 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtSettings = configuration.GetSection("JwtSettings");
+            //var jwtSettings = configuration.GetSection("JwtSettings");
+            var jwtConfiguration = new JwtConfiguration();
+            configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+
             var secretKey = Environment.GetEnvironmentVariable("SECRET");
 
             services.AddAuthentication(opt =>
@@ -121,8 +125,8 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
 
-                    ValidIssuer = jwtSettings["validIssuer"],
-                    ValidAudience = jwtSettings["validAudience"],
+                    ValidIssuer = jwtConfiguration.ValidIssuer,
+                    ValidAudience = jwtConfiguration.ValidAudience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
             });

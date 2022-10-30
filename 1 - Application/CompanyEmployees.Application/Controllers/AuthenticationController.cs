@@ -42,7 +42,9 @@ namespace CompanyEmployees.Application.Controllers
             if (!await _service.Authentication.ValidateUser(user))
                 return Unauthorized();
 
-            return Ok(new { Token = await _service.Authentication.CreateToken() });
+            var tokenDto = await _service.Authentication.CreateToken(populataeExp: true);
+
+            return Ok(tokenDto);
         }
     }
 }

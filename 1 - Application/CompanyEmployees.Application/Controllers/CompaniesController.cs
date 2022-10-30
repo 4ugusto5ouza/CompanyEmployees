@@ -14,6 +14,7 @@ namespace CompanyEmployees.Application.Controllers
 {
     [Route("api/companies")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class CompaniesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -31,6 +32,11 @@ namespace CompanyEmployees.Application.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Gets the list of all companies
+        /// </summary>
+        /// <param name="companyParameters">Testes</param>
+        /// <returns>The companies list</returns>
         [HttpGet(Name = "GetCompanies")]
         [HttpHead]
         [Authorize(Roles = "Administrator")]
@@ -57,7 +63,16 @@ namespace CompanyEmployees.Application.Controllers
             return Ok(company);
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Creates a newly created company
+        /// </summary>
+        /// <param name="company"></param>
+        /// <returns>A newly created company</returns>
+        /// <reponse code= "201">Returns the newly created company</returns>
+        [HttpPost(Name ="CreateCompany")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {

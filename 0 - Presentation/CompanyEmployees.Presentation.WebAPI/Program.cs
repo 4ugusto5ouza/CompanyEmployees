@@ -29,6 +29,7 @@ builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddConfigureJwtConfiguration(builder.Configuration);
+builder.Services.ConfigureSwagger();
 
 builder.Services.Configure<ApiBehaviorOptions>(opt =>
 {
@@ -72,6 +73,12 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.All
 });
 
+app.UseSwagger();
+app.UseSwaggerUI(s =>
+{
+    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Company Employees Api v1");
+    s.SwaggerEndpoint("/swagger/v2/swagger.json", "Company Employees Api v2");
+});
 
 app.UseCors("CorsPolicy");
 

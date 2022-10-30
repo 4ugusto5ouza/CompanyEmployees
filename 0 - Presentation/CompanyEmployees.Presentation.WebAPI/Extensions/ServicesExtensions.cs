@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -133,5 +134,56 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
 
         public static void AddConfigureJwtConfiguration(this IServiceCollection services, IConfiguration configuration)
             => services.Configure<JwtConfiguration>(configuration.GetSection("JwtSettings"));
+
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Company Employees Api",
+                    Version = "v1",
+                    Description =" CompanyEmployees API by Samuel Souza learn Ultimate Asp net core",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Samuel Souza",
+                        Email = "ssouza.fullstack.gmail.com",
+                        Url= new Uri("https://github.com/4ugusto5ouza")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "CompanyEmployees API LTDA",
+                        Url = new Uri("https://example.com/license")
+                    }
+                });
+                s.SwaggerDoc("v2", new OpenApiInfo { Title = "Company Employees Api", Version = "v2" });
+
+                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Place to add JWT with Bearer",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Name = "Bearer",
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                        },
+                        new List<string>()
+                    }
+                });
+            });
+        }
     }
 }

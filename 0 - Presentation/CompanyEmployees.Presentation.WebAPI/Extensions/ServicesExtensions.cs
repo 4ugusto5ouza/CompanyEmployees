@@ -106,7 +106,6 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
-            //var jwtSettings = configuration.GetSection("JwtSettings");
             var jwtConfiguration = new JwtConfiguration();
             configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
 
@@ -131,5 +130,8 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
                 };
             });
         }
+
+        public static void AddConfigureJwtConfiguration(this IServiceCollection services, IConfiguration configuration)
+            => services.Configure<JwtConfiguration>(configuration.GetSection("JwtSettings"));
     }
 }

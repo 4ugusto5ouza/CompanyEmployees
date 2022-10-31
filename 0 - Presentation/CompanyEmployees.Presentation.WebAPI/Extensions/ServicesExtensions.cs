@@ -49,7 +49,7 @@ namespace CompanyEmployees.Presentation.WebAPI.Extensions
 
         public static void ConfigureSQLContext(this IServiceCollection services, IConfiguration configuration) =>
             services.AddDbContext<CompanyEmployeesContext>(opts =>
-                    opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+                    opts.UseInMemoryDatabase("CompanyEmployees"));
 
         public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
             builder.AddMvcOptions(config => config.OutputFormatters.Add(new CsvOutputFormatter()));

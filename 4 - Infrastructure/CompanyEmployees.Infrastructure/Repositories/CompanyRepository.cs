@@ -19,6 +19,15 @@ namespace CompanyEmployees.Infrastructure.Repositories
         {
         }
 
+        public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges)
+        {
+            var companies = await FindAll(trackChanges)
+                                    .OrderBy(c => c.Name)
+                                    .ToListAsync();
+
+            return companies;
+        }
+
         public async Task<PagedList<Company>> GetAllCompaniesAsync(CompanyParameters companyParameters, bool trackChanges)
         {
             var companies = await FindAll(trackChanges)
@@ -31,6 +40,7 @@ namespace CompanyEmployees.Infrastructure.Repositories
 
             return new PagedList<Company>(companies, count, companyParameters.PageNumber, companyParameters.PageSize);
         }
+
         public async Task<IEnumerable<Company>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges)
         {
             return await FindByCondition(x => ids.Contains(x.Id), trackChanges).ToListAsync();
